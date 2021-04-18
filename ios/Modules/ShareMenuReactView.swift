@@ -66,12 +66,12 @@ public class ShareMenuReactView: NSObject {
 
         let extensionContext = viewDelegate.loadExtensionContext()
 
-        guard let item = extensionContext.inputItems.first as? NSExtensionItem else {
-            print("Error: \(COULD_NOT_FIND_ITEM_ERROR)")
+        guard let items = extensionContext.inputItems as? [NSExtensionItem] else {
+            print("Error: \(COULD_NOT_FIND_ITEMS_ERROR)")
             return
         }
 
-        viewDelegate.continueInApp(with: item, and: extraData)
+        viewDelegate.continueInApp(with: items, and: extraData)
     }
 
     @objc(data:reject:)
