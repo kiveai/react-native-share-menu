@@ -72,11 +72,10 @@ class ShareViewController: SLComposeServiceViewController {
         self.removeExtraData()
       }
 
+      let semaphore = DispatchSemaphore(value: 0)
       var results: [Any] = []
 
       for item in items {
-        let semaphore = DispatchSemaphore(value: 0)
-
         guard let attachments = item.attachments else {
           self.cancelRequest()
           return
@@ -90,8 +89,9 @@ class ShareViewController: SLComposeServiceViewController {
           } else {
             self.storeFile(withProvider: provider, semaphore)
           }
+
+          semaphore.wait()
         }
-        semaphore.wait()
       }
 
       userDefaults.set(self.sharedItems,
