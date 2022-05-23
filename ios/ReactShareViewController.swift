@@ -8,6 +8,7 @@
 //
 
 import RNShareMenu
+import Firebase
 
 class ReactShareViewController: ShareViewController, RCTBridgeDelegate, ReactShareViewDelegate {
   func sourceURL(for bridge: RCTBridge!) -> URL! {
@@ -21,7 +22,16 @@ class ReactShareViewController: ShareViewController, RCTBridgeDelegate, ReactSha
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    let env = ReactNativeConfig.env(for: "ENVIRONMENT")
+    var firebasePlistFileName = "GoogleService-Info"
+    if (env == "Dev") {
+      firebasePlistFileName = "GoogleService-Info-Dev"
+    }
+    let filePath = Bundle.main.path(forResource: firebasePlistFileName, ofType: "plist")
+    let fileopts = FirebaseOptions.init(contentsOfFile: filePath!)!
 
+    FirebaseApp.configure(options: fileopts)
+    
     let bridge: RCTBridge! = RCTBridge(delegate: self, launchOptions: nil)
     let rootView = RCTRootView(
       bridge: bridge,
