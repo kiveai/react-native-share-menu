@@ -8,7 +8,6 @@
 //
 
 import RNShareMenu
-import Firebase
 
 class ReactShareViewController: ShareViewController, RCTBridgeDelegate, ReactShareViewDelegate {
   func sourceURL(for bridge: RCTBridge!) -> URL! {
@@ -47,24 +46,9 @@ class ReactShareViewController: ShareViewController, RCTBridgeDelegate, ReactSha
 
     self.view = rootView
     
-    setupFirebase()
-    
     ShareMenuReactView.attachViewDelegate(self)
   }
   
-  func setupFirebase () {
-    let env = ReactNativeConfig.env(for: "ENVIRONMENT")
-    var firebasePlistFileName = "GoogleService-Info"
-    if (env == "Dev") {
-      firebasePlistFileName = "GoogleService-Info-Dev"
-    }
-    let filePath = Bundle.main.path(forResource: firebasePlistFileName, ofType: "plist")
-    let fileopts = FirebaseOptions.init(contentsOfFile: filePath!)!
-
-    FirebaseApp.configure(options: fileopts)
-
-  }
-
   override func viewDidDisappear(_ animated: Bool) {
     cancel()
     ShareMenuReactView.detachViewDelegate()
