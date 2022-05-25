@@ -11,36 +11,30 @@ import RNShareMenu
 import Firebase
 class ReactShareViewController: ShareViewController, RCTBridgeDelegate, ReactShareViewDelegate {
   func sourceURL(for bridge: RCTBridge!) -> URL! {
-#if DEBUG
-    return RCTBundleURLProvider.sharedSettings()?
-      .jsBundleURL(forBundleRoot: "index.share")
-#else
-    return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
-#endif
+    #if DEBUG
+        return RCTBundleURLProvider.sharedSettings()?
+          .jsBundleURL(forBundleRoot: "index.share")
+    #else
+        return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
+    #endif
   }
-  
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-      setupFirebase()
-      return true
-  }
-
 
   func setupFirebase () {
-      let env = ReactNativeConfig.env(for: "ENVIRONMENT")
-      var firebasePlistFileName = "GoogleService-Info"
-      if (env == "Dev") {
-        firebasePlistFileName = "GoogleService-Info-Dev"
-      }
-      let filePath = Bundle.main.path(forResource: firebasePlistFileName, ofType: "plist")
-      let fileopts = FirebaseOptions.init(contentsOfFile: filePath!)!
-
-      FirebaseApp.configure(options: fileopts)
+    let env = ReactNativeConfig.env(for: "ENVIRONMENT")
+    var firebasePlistFileName = "GoogleService-Info"
+    if (env == "Dev") {
+      firebasePlistFileName = "GoogleService-Info-Dev"
     }
-
+    let filePath = Bundle.main.path(forResource: firebasePlistFileName, ofType: "plist")
+    let fileopts = FirebaseOptions.init(contentsOfFile: filePath!)!
+    FirebaseApp.app() == nil {
+      FirebaseApp.configure(options: fileopts)
+    }    
+  }
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    setupFirebase()
     let bridge: RCTBridge! = RCTBridge(delegate: self, launchOptions: nil)
     let rootView = RCTRootView(
       bridge: bridge,
