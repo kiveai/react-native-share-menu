@@ -27,9 +27,7 @@ class ReactShareViewController: ShareViewController, RCTBridgeDelegate, ReactSha
     }
     let filePath = Bundle.main.path(forResource: firebasePlistFileName, ofType: "plist")
     let fileopts = FirebaseOptions.init(contentsOfFile: filePath!)!
-    FirebaseApp.app() == nil {
-      FirebaseApp.configure(options: fileopts)
-    }    
+    FirebaseApp.configure(options: fileopts)
   }
 
   override func viewDidLoad() {
